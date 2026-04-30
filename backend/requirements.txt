@@ -1,0 +1,10 @@
+streamlit
+pandas
+scikit-learn
+spacy
+pymupdf
+docx2txt
+plotly
+fastapi
+uvicorn
+python-multipart
