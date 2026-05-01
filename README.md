@@ -56,3 +56,34 @@ Grevi Resume Analyzer is an AI-powered web application that analyzes resumes aga
 ---
 
 ## 📂 Project Structure
+
+grevi-resume-analyzer/
+│
+├── src/ # React frontend
+├── public/ # Static assets
+├── backend/ # FastAPI backend
+├── package.json
+└── README.md
+
+---
+
+## 🚀 How It Works
+
+1. User uploads a resume
+2. User provides job description
+3. Backend extracts and analyzes text
+4. AI compares skills and keywords
+5. Generates:
+   - Match score
+   - Missing skills
+   - Suggested projects
+   - Resume improvements
+
+---
+
+## ⚙️ Installation (Local Setup)
+
+### Frontend
+```bash
+npm install
+npm run dev
