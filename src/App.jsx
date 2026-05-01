@@ -5,25 +5,35 @@ import UploadPanel from './components/UploadPanel';
 import LoadingScreen from './components/LoadingScreen';
 import Dashboard from './components/Dashboard';
 
+// ✅ Added base URL for backend
+const API_BASE_URL = "https://grevi-backend.onrender.com";
+
 function App() {
   const [appState, setAppState] = useState('upload'); // 'upload', 'loading', 'results'
   const [analysisData, setAnalysisData] = useState(null);
 
   const handleAnalyze = async (formData) => {
     setAppState('loading');
-    
+
     try {
-      const response = await axios.post('http://localhost:8000/analyze', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axios.post(
+        `${API_BASE_URL}/analyze`, // ✅ FIXED HERE
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      });
+      );
+
       setAnalysisData(response.data);
-      // Note: We don't change state to 'results' here immediately.
-      // We wait for the 5-second LoadingScreen to call handleLoadingComplete.
+
     } catch (error) {
       console.error("Error analyzing:", error);
-      alert("An error occurred during analysis. Make sure the backend is running on port 8000.");
+
+      // Better error message
+      alert("Error connecting to server. Please try again.");
+
       setAppState('upload');
     }
   };
@@ -32,7 +42,6 @@ function App() {
     if (analysisData) {
       setAppState('results');
     } else {
-      // If backend failed, this handles edge case
       setAppState('upload');
     }
   };
@@ -44,6 +53,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-slate-100 overflow-x-hidden relative">
+
       {/* Background blobs */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/20 blur-[120px] animate-blob"></div>
@@ -62,9 +72,10 @@ function App() {
         </motion.div>
       </header>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="px-6 relative z-10">
         <AnimatePresence mode="wait">
+
           {appState === 'upload' && (
             <motion.div key="upload" exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.3 }}>
               <UploadPanel onAnalyze={handleAnalyze} />
@@ -76,10 +87,16 @@ function App() {
           )}
 
           {appState === 'results' && analysisData && (
-            <motion.div key="results" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
+            <motion.div
+              key="results"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
               <Dashboard data={analysisData} onReset={resetState} />
             </motion.div>
           )}
+
         </AnimatePresence>
       </main>
     </div>
